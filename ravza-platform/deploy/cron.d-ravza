@@ -1,0 +1,6 @@
+# /etc/cron.d/ravza
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+* * * * * root /opt/ravza/app/deploy/cron-notifications.sh
+30 3 * * * root /opt/ravza/app/deploy/backup.sh

@@ -1,0 +1,17 @@
+{
+  "briefVersion": "1.0",
+  "assetType": "landing_hero",
+  "purpose": "B2B acenteye güvenli toplu operasyonu anlatmak",
+  "audience": ["agency_admin"],
+  "locales": ["tr-TR"],
+  "dimensions": [{ "width": 1600, "height": 900 }],
+  "safeAreas": { "leftTextPercent": 42 },
+  "styleTokens": ["night-green", "sand", "muted-gold", "calm", "premium"],
+  "mustInclude": ["soyut takvim ritmi", "insan onaylı süreç hissi"],
+  "mustAvoid": ["QR", "pasaport", "resmi kurum logosu", "garanti", "kalabalık klişesi", "gerçek kişi"],
+  "textPolicy": "no_baked_text",
+  "legalFlags": ["no_official_affiliation_claim"],
+  "variantCount": 3,
+  "reviewers": ["brand", "product", "legal_when_needed"],
+  "status": "human_review"
+}

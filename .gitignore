@@ -1,0 +1,11 @@
+# yerel geçici dosyalar
+/tmp/
+
+# gizli değerler
+.env
+.env.*
+!.env.example
+
+# işletim sistemi
+.DS_Store
+Thumbs.db

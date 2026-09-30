@@ -1,0 +1,330 @@
+{
+  "manifestVersion": "1.2",
+  "roles": {
+    "served": "public/ altında yayımlanan, uygulamanın gerçekten yüklediği dosya",
+    "master": "assets/masters/ altında arşivlenen kaynak dosya; web kökünde servis edilmez"
+  },
+  "assets": [
+    {
+      "id": "umrah-preparation-set-v1",
+      "role": "served",
+      "path": "public/umrah-preparation-set.webp",
+      "purpose": "landing_package_section_visual",
+      "dimensions": {
+        "width": 1535,
+        "height": 1024
+      },
+      "mime": "image/webp",
+      "bytes": 144498,
+      "sha256": "34c81e11c2c2a7d6b48f723b11e67b0e094726bebe8bf3f26932cf2ddb2e6f2b",
+      "derivedFrom": "pilgrimage-preparation-v2",
+      "derivation": "sharp webp q82 effort6; kırpma yok",
+      "provenance": "verified_local_conversion",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-preparation",
+      "language": "tr",
+      "alt": "Umre yolculuğu için ihram, tesbih ve seyahat hazırlığı",
+      "usage": [
+        "landing"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "medina-nabawi-evening-v1",
+      "role": "served",
+      "path": "public/medina-nabawi-evening.webp",
+      "purpose": "landing_single_panel_visual",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mime": "image/webp",
+      "bytes": 127030,
+      "sha256": "50c937f61f29a9b6159a6b4a74b7d75b700a445b70321db6caf8b39f5488a806",
+      "derivedFrom": "medina-ravza-v2",
+      "derivation": "sharp webp q82 effort6; kırpma yok",
+      "provenance": "verified_local_conversion",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-medina-blue-hour",
+      "language": "tr",
+      "alt": "Akşam saatlerinde Mescid-i Nebevî avlusu ve yeşil kubbe",
+      "usage": [
+        "landing"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "umrah-kaaba-golden-hour-v1",
+      "role": "served",
+      "path": "public/umrah-kaaba-golden-hour.webp",
+      "purpose": "landing_hero_primary",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mime": "image/webp",
+      "bytes": 120566,
+      "sha256": "82ac1476288a42f3f30a0383051f9baca0faa6b3ce83e8ebfad255ee9c3fb72f",
+      "derivedFrom": "hajj-umrah-hero-v2",
+      "derivation": "sharp webp q82 effort6; kırpma veya yeniden boyutlandırma yok",
+      "provenance": "verified_local_conversion",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-kaaba-dawn",
+      "language": "tr",
+      "alt": "Gün batımında Mescid-i Haram avlusunda Kâbe ve ziyaretçiler",
+      "usage": [
+        "landing",
+        "home"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "og-social-preview-v2",
+      "role": "served",
+      "path": "public/og.jpg",
+      "purpose": "site_social_preview",
+      "dimensions": {
+        "width": 1200,
+        "height": 675
+      },
+      "mime": "image/jpeg",
+      "bytes": 39544,
+      "sha256": "fb28d8b1cddcaf21227551232331ed98b8d8e313f63ba9eefae0e22d25a2f1e6",
+      "derivedFrom": "ravza-operations-og-v1",
+      "derivation": "sharp resize 1200x675 cover + marka logosu/adı bindirmesi + mozjpeg q86",
+      "provenance": "verified_local_conversion",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "brand-v1",
+      "language": "tr",
+      "alt": "Ravza Randevu markası ve geometrik marka zemini",
+      "usage": [
+        "opengraph",
+        "twitter_card"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "pending",
+      "published": false
+    },
+    {
+      "id": "umrah-medina-evening-v1",
+      "role": "master",
+      "path": "assets/masters/umrah-medina-evening.webp",
+      "purpose": "retired_unverified_visual",
+      "dimensions": {
+        "width": 1448,
+        "height": 1086
+      },
+      "mime": "image/webp",
+      "bytes": 159982,
+      "sha256": "16f5d1c59e01eef1dcd244e0c4999e0ee78992277e942cdd29626a942289d893",
+      "derivedFrom": null,
+      "provenance": "unverified",
+      "provenanceNote": "Sitede kullanımdan kaldırıldı; yerine provenansı doğrulanmış master türevleri geçti. Arşivde tutulur.",
+      "source": "unknown",
+      "promptVersion": null,
+      "language": "tr",
+      "alt": "Medine'de akşam saatlerinde Mescid-i Nebevî",
+      "usage": [],
+      "rightsStatus": "review_required",
+      "humanApproval": "pending",
+      "published": false,
+      "servedDerivatives": []
+    },
+    {
+      "id": "umrah-preparation-v1",
+      "role": "master",
+      "path": "assets/masters/umrah-preparation.webp",
+      "purpose": "retired_unverified_visual",
+      "dimensions": {
+        "width": 1448,
+        "height": 1086
+      },
+      "mime": "image/webp",
+      "bytes": 129270,
+      "sha256": "a3fcb3f9f20d850c6d11f7dca22dfd7f259c1596a51343ad1c730ceaf2f7d7b3",
+      "derivedFrom": null,
+      "provenance": "unverified",
+      "provenanceNote": "Sitede kullanımdan kaldırıldı; yerine provenansı doğrulanmış master türevleri geçti. Arşivde tutulur.",
+      "source": "unknown",
+      "promptVersion": null,
+      "language": "tr",
+      "alt": "Umre yolculuğu için ihram ve seyahat hazırlığı",
+      "usage": [],
+      "rightsStatus": "review_required",
+      "humanApproval": "pending",
+      "published": false,
+      "servedDerivatives": []
+    },
+    {
+      "id": "hajj-umrah-hero-v2",
+      "role": "master",
+      "path": "assets/masters/hajj-umrah-hero-v2.png",
+      "purpose": "landing_package_customer_hero",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mime": "image/png",
+      "bytes": 2110818,
+      "sha256": "766beb378770a784fa6551b21452a4f7cb81a7936696bca98208b71a3fa7e299",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-kaaba-dawn",
+      "provenance": "verified",
+      "language": "tr",
+      "alt": "Kâbe ve Mescid-i Haram'da gün batımı",
+      "usage": [],
+      "servedDerivatives": [
+        "umrah-kaaba-golden-hour-v1"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "ravza-operations-og-v1",
+      "role": "master",
+      "path": "assets/masters/og.png",
+      "purpose": "site_social_preview",
+      "dimensions": {
+        "width": 1672,
+        "height": 941
+      },
+      "mime": "image/png",
+      "bytes": 2248889,
+      "sha256": "96e755e19be8c575e0074ca9cce1cd173a997a5b72a4325641845a72526ee75b",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "brand-v1",
+      "provenance": "verified",
+      "language": "tr",
+      "alt": "Ravza Operasyon marka zemini",
+      "usage": [],
+      "servedDerivatives": [
+        "og-social-preview-v2"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "pending",
+      "published": false
+    },
+    {
+      "id": "medina-ravza-v2",
+      "role": "master",
+      "path": "assets/masters/medina-ravza-v2.png",
+      "purpose": "umrah_ravza_and_dashboard_visual",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mime": "image/png",
+      "bytes": 2205207,
+      "sha256": "5691b8496e6f9b10dcf601b3688d1b65d105ddef8766e33c2e88b6bb9a6ee639",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-medina-blue-hour",
+      "provenance": "verified",
+      "language": "tr",
+      "alt": "Medine Mescid-i Nebevî avlusu",
+      "usage": [],
+      "servedDerivatives": [
+        "medina-nabawi-evening-v1"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "mina-hajj-route-v2",
+      "role": "master",
+      "path": "assets/masters/mina-hajj-route-v2.png",
+      "purpose": "hajj_route_visual",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mime": "image/png",
+      "bytes": 2611709,
+      "sha256": "1d3ca53282ff6a3e7b0fa55be41a9346c8cb7992a3f38acef3657bcd49e312c3",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-mina-route",
+      "provenance": "verified",
+      "language": "tr",
+      "alt": "Mina çadırları ve Hac güzergâhı",
+      "usage": [],
+      "servedDerivatives": [],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "pilgrimage-preparation-v2",
+      "role": "master",
+      "path": "assets/masters/pilgrimage-preparation-v2.png",
+      "purpose": "journey_preparation_visual",
+      "dimensions": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mime": "image/png",
+      "bytes": 2196672,
+      "sha256": "1fcabde9b227b85cf0981928c87884c3f71612a00a779ab63f79531694ee502b",
+      "source": "openai-built-in-imagegen",
+      "promptVersion": "pilgrimage-photo-v2-preparation",
+      "provenance": "verified",
+      "language": "tr",
+      "alt": "Hac ve Umre seyahati için valiz, ihram ve tesbih hazırlığı",
+      "usage": [],
+      "servedDerivatives": [
+        "umrah-preparation-set-v1"
+      ],
+      "rightsStatus": "review_required",
+      "humanApproval": "approved_for_local_prototype",
+      "published": false
+    },
+    {
+      "id": "umrah-kaaba-dawn-v1",
+      "role": "master",
+      "path": "assets/masters/umrah-kaaba-dawn.webp",
+      "purpose": "retired_landing_hero",
+      "dimensions": {
+        "width": 1448,
+        "height": 1086
+      },
+      "mime": "image/webp",
+      "bytes": 155048,
+      "sha256": "96911898468f9c98fbaf779dc0f5df1d4630b95367184e378aadbe26b7a8d072",
+      "derivedFrom": null,
+      "provenance": "unverified",
+      "provenanceNote": "2026-09-05 tarihine kadar landing hero olarak kullanıldı; umrah-kaaba-golden-hour-v1 ile değiştirildi. Üretim aracı ve lisans kaynağı bilinmiyor. Geri alma adayı olarak arşivlendi.",
+      "source": "unknown",
+      "promptVersion": null,
+      "language": "tr",
+      "alt": "Kâbe ve Mescid-i Haram'da gün doğumu",
+      "usage": [],
+      "servedDerivatives": [],
+      "rightsStatus": "review_required",
+      "humanApproval": "pending",
+      "published": false
+    }
+  ],
+  "openIssues": [],
+  "policy": {
+    "requiresHumanApproval": true,
+    "prohibitedData": [
+      "passenger",
+      "passport",
+      "visa",
+      "qr",
+      "payment",
+      "reservation",
+      "support_content"
+    ],
+    "officialAffiliationClaims": false,
+    "productionPublishBlockedUntilRightsReview": true,
+    "servedPathPrefix": "public/",
+    "masterPathPrefix": "assets/masters/"
+  }
+}

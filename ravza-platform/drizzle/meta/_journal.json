@@ -1,0 +1,83 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1788479255071,
+      "tag": "0000_thankful_revanche",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1788500771522,
+      "tag": "0001_omniscient_retro_girl",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1788504000000,
+      "tag": "0002_add_demo_audit_actor",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1788566400000,
+      "tag": "0003_payment_safety",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1788570000000,
+      "tag": "0004_usd_payment_default",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1788597283289,
+      "tag": "0005_spotty_the_leader",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1788597967042,
+      "tag": "0006_fantastic_hannibal_king",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1788598435675,
+      "tag": "0007_colossal_mesmero",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1788600000000,
+      "tag": "0008_customer_travel_profile",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1788768786377,
+      "tag": "0009_motionless_catseye",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1788770804243,
+      "tag": "0010_outgoing_sentinels",
+      "breakpoints": true
+    }
+  ]
+}

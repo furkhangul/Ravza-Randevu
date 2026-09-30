@@ -1,0 +1,24 @@
+# /etc/systemd/system/ravza.service
+[Unit]
+Description=Ravza Randevu web uygulamasi
+After=network.target
+
+[Service]
+Type=simple
+User=ravza
+Group=ravza
+WorkingDirectory=/opt/ravza/app
+EnvironmentFile=/etc/ravza/ravza.env
+ExecStart=/usr/bin/node dist/standalone/server.js
+Restart=always
+RestartSec=3
+
+# Uygulama yalnız veritabanı klasörüne yazabilir.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/ravza
+
+[Install]
+WantedBy=multi-user.target

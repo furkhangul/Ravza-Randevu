@@ -1,0 +1,11 @@
+{
+  "fixtureVersion": "1.0",
+  "synthetic": true,
+  "agency": { "id": "agency_demo_001", "name": "Hira Turizm Demo" },
+  "balance": { "available": 248, "reserved": 12 },
+  "orders": [
+    { "id": "ORD-DEMO-1042", "groupCode": "GRP-SEP-04-A", "window": "17:00-17:20", "gender": "female", "count": 3, "status": "qr_ready" },
+    { "id": "ORD-DEMO-1043", "groupCode": "GRP-SEP-04-B", "window": "19:00-19:20", "gender": "male", "count": 4, "status": "qr_pending" },
+    { "id": "ORD-DEMO-1044", "groupCode": "GRP-SEP-04-C", "window": "21:20-21:40", "gender": "female", "count": 1, "status": "unknown" }
+  ]
+}

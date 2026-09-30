@@ -1,0 +1,1636 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Rawdah Booking API",
+    "description": "Rawdah booking portal external integration APIs. Only explicitly exposed endpoints are listed.\n\n**Access:** Partner docs at `/docs`, Swagger UI at `/swagger`, and OpenAPI JSON at `/swagger/v1/swagger.json` require a signed-in portal user.\n\n**Authentication:** Obtain a JWT via `POST /api/Auth/login`, then send `Authorization: Bearer {token}` on other requests.\n\n**Dates:** All date parameters and date fields (e.g. `date`, `startDate`, `endDate`, `dateKey`) must be sent in `yyyy-MM-dd` format (example: `2026-07-05`). Do not include time or timezone.",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/AppointmentQueue/GetBookedAppointments": {
+      "get": {
+        "tags": [
+          "Appointment Pool"
+        ],
+        "summary": "Returns the available dates/times and their counts in the current appointment pool.",
+        "description": "Availability for males and females is provided separately.\r\n\nAlso returns whether you have sufficient appointment balance.\r\nYou must specify the desired appointment date range.\r\n\nDate filters use `yyyy-MM-dd` (e.g. `2026-07-05`).",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Inclusive range start (`yyyy-MM-dd`).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "Inclusive range end (`yyyy-MM-dd`).",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a calendar payload including `success`, `hasBalance`, and gender/date availability information.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBookedAppointmentsResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBookedAppointmentsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "hasBalance": true,
+                  "dataMale": {
+                    "2026-07-05": {
+                      "18:01": 12,
+                      "20:01": 4
+                    }
+                  },
+                  "dataFemale": {
+                    "2026-07-05": {
+                      "18:01": 8
+                    }
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBookedAppointmentsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Authentication required."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User type is not allowed for this operation.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Access denied."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Internal server error."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/AppointmentQueue/PurchaseAppointments": {
+      "post": {
+        "tags": [
+          "Appointment Pool"
+        ],
+        "summary": "Purchases appointments from the shared appointment pool.",
+        "description": "Use this endpoint to claim pool slots shown by `GET /api/AppointmentQueue/GetBookedAppointments`.\r\nEach purchased slot is assigned to your account and deducted from your appointment balance (1 credit per slot).\r\n\n<b>Pool source:</b> Confirmed/completed appointments held under the system pool user are transferred to the buyer.\n<b>Request:</b>`dateKey` in `yyyy-MM-dd` format (e.g. `2026-07-05`), `timeSlot` (e.g. `18:01`), `genderId` (`Male` or `Female`), `quantity`, and optional `groupCode`.\nRequires a JWT Bearer token (`POST /api/Auth/login`). Allowed for `Kurumsal` and `Bireysel` users with positive balance.",
+        "requestBody": {
+          "description": "Target pool slot and quantity to purchase.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseAppointmentsPoolRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseAppointmentsPoolRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseAppointmentsPoolRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Purchase succeeded; returns `purchasedCount`, `remainingBalance`, and `orderId`.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseAppointmentsResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseAppointmentsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "message": "Purchase completed.",
+                  "purchasedCount": 2,
+                  "quantity": 2,
+                  "remainingBalance": 23,
+                  "orderId": 9001,
+                  "balanceCharged": 2,
+                  "discountApplied": false,
+                  "discountCampaignName": null
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseAppointmentsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input, insufficient balance, or not enough pool slots available.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Insufficient pool stock."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Authentication required."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User type not allowed or zero appointment balance.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Appointment balance required."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Internal server error."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/Auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Signs in with email and password; returns a JWT.",
+        "description": "Partner API sign-in for Swagger and programmatic clients. Copy the `token` from a successful\r\nresponse into Swagger <b>Authorize</b> as `Bearer {token}`. Requires a positive appointment balance;\r\notherwise returns 403 with a localized message.",
+        "requestBody": {
+          "description": "Login credentials (email, password).",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sign-in succeeded; returns JWT and user summary.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                },
+                "example": {
+                  "token": "eyJhbGciOi...",
+                  "expiresAt": "2026-07-30T22:00:00Z",
+                  "user": {
+                    "id": 1001,
+                    "email": "developer@example.com",
+                    "companyName": "Example Travel",
+                    "phone": null,
+                    "appointmentBalance": 25,
+                    "authorizedPerson": "Demo User",
+                    "userType": "Kurumsal"
+                  },
+                  "redirectUrl": null
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request or validation error.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Validation failed."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email/password or inactive user.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Invalid email or password."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Valid credentials but appointment balance is zero.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "You cannot make API requests because you do not have sufficient balance."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/QRCode/GetPrintGroups": {
+      "get": {
+        "tags": [
+          "QR Code"
+        ],
+        "summary": "Lists upcoming QR code print groups for the signed-in user.",
+        "description": "Same dataset as the `/QRCode/Print` page: passengers grouped by appointment date, time,\r\ngender, group code, purchase id, and print guid. Only today and future appointments are included.\r\nSorted by date, then appointment time, gender, and group code.\r\n\nResponse `dateKey` values use `yyyy-MM-dd` (e.g. `2026-07-05`) for `GetPrintListPassengers`.\nRequires a JWT Bearer token (`POST /api/Auth/login`).",
+        "responses": {
+          "200": {
+            "description": "Grouped print rows with confirmed/printed counts.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintGroupsResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintGroupsResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "date": "2026-07-05T00:00:00Z",
+                      "dateKey": "2026-07-05",
+                      "groupCode": "GRP-DEMO",
+                      "appointmentTime": "18:00-18:20",
+                      "genderId": 8,
+                      "gender": "Male",
+                      "purchaseId": 501,
+                      "printGuid": null,
+                      "confirmedCount": 2,
+                      "printedCount": 0,
+                      "totalCount": 2,
+                      "groupKey": "2026-07-05|GRP-DEMO|18:00-18:20|8|501"
+                    }
+                  ],
+                  "count": 1
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintGroupsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "User not found."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User type is not allowed for this operation.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Access denied."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Internal server error."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/QRCode/GetPrintListPassengers": {
+      "get": {
+        "tags": [
+          "QR Code"
+        ],
+        "summary": "Lists passengers for a QR print group (same data as the PrintList page).",
+        "description": "Use filters from `GET /api/QRCode/GetPrintGroups` (`dateKey`, `groupCode`,\r\n`appointmentTime`, `genderId`, `purchaseId`, `printGuid`).\r\n\n`date` query parameter must be `yyyy-MM-dd` (e.g. `2026-07-05`).\n`status`: `All` (default), `WithQr`, `WithoutQr`, `Printed`.\nRequires a JWT Bearer token (`POST /api/Auth/login`).",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Appointment date in `yyyy-MM-dd` format (e.g. `2026-07-05`).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "groupCode",
+            "in": "query",
+            "description": "Group code; omit or `null` for passengers without a group.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "appointmentTime",
+            "in": "query",
+            "description": "Time range (e.g. `18:00-18:20`).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "genderId",
+            "in": "query",
+            "description": "Gender (`1` = Male, `2` = Female).",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "purchaseId",
+            "in": "query",
+            "description": "Purchase record id.",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "printGuid",
+            "in": "query",
+            "description": "Print/share batch guid; `null` for unshared rows.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "description": "Passenger filter: All, WithQr, WithoutQr, Printed.",
+            "schema": {
+              "type": "string",
+              "default": "All"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Passenger rows with QR/print metadata.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintListPassengersResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintListPassengersResponse"
+                },
+                "example": {
+                  "success": true,
+                  "data": [
+                    {
+                      "id": 10001,
+                      "name": "Ali",
+                      "surname": "Demo",
+                      "groupCode": "GRP-DEMO",
+                      "appointmentDate": "2026-07-05T00:00:00Z",
+                      "appointmentTime": "18:00-18:20",
+                      "appointmentStatus": 2,
+                      "genderId": 8,
+                      "gender": "Male",
+                      "purchaseId": 501,
+                      "printGuid": null,
+                      "hasQr": true,
+                      "isDisabled": false,
+                      "isAppointmentPast": false,
+                      "ravzaReservationId": "RES-12345",
+                      "nusukStatus": "Confirmed"
+                    }
+                  ],
+                  "count": 1,
+                  "withQrCount": 1
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrintListPassengersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date format.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Invalid date format."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "User not found."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User type is not allowed for this operation.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Access denied."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Internal server error."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/QRCode/CreatePrintShareLink": {
+      "post": {
+        "tags": [
+          "QR Code"
+        ],
+        "summary": "Creates an anonymous QR print share link (same action as the Print page Share buttons).",
+        "description": "Marks matching passengers with a 5-character short code and returns a public URL\r\n(`https://rwdh.link/{code}`) that anyone can open without signing in.\r\n\n\r\nFilters match `GET /api/QRCode/GetPrintGroups` / PrintList group keys:\r\n`date` (`yyyy-MM-dd`), optional `groupCode`, `appointmentTime`,\r\n`genderId`, `purchaseId`, and `printGuid` (`\"null\"` or omit for not-yet-shared rows,\r\nor an existing 5-char code to re-share that batch).\r\n\n\r\nOptional `personCount` limits how many passengers from the filtered set are included\r\n(first N by appointment time / id). Optional `shareGroupName` rewrites `GroupCode`\r\non those passengers before saving.\r\n\nOn success the response includes `url` (share this with the customer), `code`, and `passengerCount`.\nRequires a JWT Bearer token (`POST /api/Auth/login`). Allowed for `Admin`, `Kurumsal`, and `Bireysel`.",
+        "requestBody": {
+          "description": "Print group filters and optional person count / group name.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePrintShareLinkRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePrintShareLinkRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePrintShareLinkRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Share link created; returns `success`, `code`, `url`, `passengerCount`.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePrintShareLinkResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePrintShareLinkResponse"
+                },
+                "example": {
+                  "success": true,
+                  "code": "Ab3xY",
+                  "url": "https://rwdh.link/Ab3xY",
+                  "passengerCount": 2
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePrintShareLinkResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid date, no matching passengers, or personCount too high.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "No matching passengers."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "User not found."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User type is not allowed for this operation.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Access denied."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Internal server error."
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/QRCode/ExportPrintListPdf": {
+      "post": {
+        "tags": [
+          "QR Code"
+        ],
+        "summary": "Exports selected passengers as a QR code PDF and marks them as printed.",
+        "description": "Same action as the PrintList page PDF download. Pass passenger `id` values from\r\n`GET /api/QRCode/GetPrintListPassengers`; only passengers with a QR code are included.\r\n\nOn success returns `application/pdf` with header `X-Marked-Count` (number of passengers marked Printed).\n`template`: `New` (default) or `Old` (legacy layout with background image).\nRequires a JWT Bearer token (`POST /api/Auth/login`).",
+        "requestBody": {
+          "description": "Passenger ids and optional group name / template.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportPrintListPdfRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportPrintListPdfRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportPrintListPdfRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "PDF file (`application/pdf`).",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No passengers selected or none have QR codes.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "No passengers with QR codes selected."
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid token.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "User not found."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User type is not allowed for this operation.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "Access denied."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "PDF generation failed.",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartnerApiErrorResponse"
+                },
+                "example": {
+                  "success": false,
+                  "message": "PDF generation failed."
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AppointmentStatus": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "type": "integer",
+        "description": "Appointment / passenger processing status (integer in API responses).\n\nAllowed values:\n- `0` = **Waiting**\n- `1` = **Completed**\n- `2` = **Sending**\n- `3` = **Failed**\n- `4` = **Confirmed**\n- `5` = **Printed**\n- `6` = **Canceled**\n- `7` = **Expired**\n- `8` = **Reserved**",
+        "format": "int32",
+        "x-enumNames": [
+          "Waiting",
+          "Completed",
+          "Sending",
+          "Failed",
+          "Confirmed",
+          "Printed",
+          "Canceled",
+          "Expired",
+          "Reserved"
+        ]
+      },
+      "CreatePrintShareLinkRequest": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "genderId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "printGuid": {
+            "type": "string",
+            "description": "\"null\" = not yet shared batch; a valid 5-character code = that share batch.",
+            "nullable": true
+          },
+          "personCount": {
+            "type": "integer",
+            "description": "Number of people to include in the share (group split). Empty or 0 includes all matches.",
+            "format": "int32",
+            "nullable": true
+          },
+          "shareGroupName": {
+            "type": "string",
+            "description": "Optional new group name assigned to the selected people.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request to create a share link (same filters as PrintList groups)."
+      },
+      "CreatePrintShareLinkResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string",
+            "nullable": true
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "passengerCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "200 response for `POST /api/QRCode/CreatePrintShareLink`."
+      },
+      "ExportPrintListPdfRequest": {
+        "type": "object",
+        "properties": {
+          "passengerIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "description": "Passenger ids to include (from `GetPrintListPassengers`; must have QR codes).",
+            "nullable": true,
+            "example": [
+              101,
+              102,
+              103
+            ]
+          },
+          "groupName": {
+            "type": "string",
+            "description": "Optional group name applied to exported passengers before marking as Printed.",
+            "nullable": true
+          },
+          "template": {
+            "type": "string",
+            "description": "PDF layout: `New` (default) or `Old` (legacy background design).",
+            "nullable": true,
+            "example": "New"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Request body for QR PDF export (PrintList download)."
+      },
+      "Gender": {
+        "enum": [
+          8,
+          9
+        ],
+        "type": "integer",
+        "description": "Gender enum.\n\nAllowed values:\n- `8` = **Male**\n- `9` = **Female**",
+        "format": "int32",
+        "x-enumNames": [
+          "Male",
+          "Female"
+        ]
+      },
+      "GetBookedAppointmentsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "hasBalance": {
+            "type": "boolean"
+          },
+          "dataMale": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "nullable": true
+          },
+          "dataFemale": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "200 response for `GET /api/AppointmentQueue/GetBookedAppointments`."
+      },
+      "GetPrintGroupsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QrCodePrintGroupDto"
+            },
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "200 response for `GET /api/QRCode/GetPrintGroups`."
+      },
+      "GetPrintListPassengersResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QrCodePrintListPassengerDto"
+            },
+            "nullable": true
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "withQrCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "200 response for `GET /api/QRCode/GetPrintListPassengers`."
+      },
+      "LoginRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "minLength": 1,
+            "type": "string",
+            "description": "User email address.",
+            "format": "email",
+            "example": "user@company.com"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string",
+            "description": "Account password.",
+            "example": "••••••"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Login request body."
+      },
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "JWT for subsequent API calls (Bearer).",
+            "nullable": true
+          },
+          "expiresAt": {
+            "type": "string",
+            "description": "Token expiration time (UTC).",
+            "format": "date-time"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserInfo"
+          },
+          "redirectUrl": {
+            "type": "string",
+            "description": "When set, the client may redirect to this relative URL after sign-in (e.g. Telegram verification).",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Successful login response."
+      },
+      "PartnerApiErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Standard partner API error payload (`success: false`)."
+      },
+      "PurchaseAppointmentsPoolRequest": {
+        "type": "object",
+        "properties": {
+          "dateKey": {
+            "type": "string",
+            "description": "Appointment date in the pool. Format: `yyyy-MM-dd` (e.g. `2026-07-05`).",
+            "nullable": true,
+            "example": "2026-07-15"
+          },
+          "timeSlot": {
+            "type": "string",
+            "description": "Slot start time as returned by GetBookedAppointments (`HH:mm`).",
+            "nullable": true,
+            "example": "18:01"
+          },
+          "genderId": {
+            "type": "string",
+            "description": "Gender filter: `Male` or `Female`.",
+            "nullable": true,
+            "example": "Male"
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "Number of pool appointments to purchase.",
+            "format": "int32",
+            "nullable": true,
+            "example": 2
+          },
+          "groupCode": {
+            "type": "string",
+            "description": "Optional group code assigned to purchased passengers; auto-generated if omitted.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PurchaseAppointmentsResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchasedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "remainingBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "orderId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "balanceCharged": {
+            "type": "number",
+            "format": "double"
+          },
+          "discountApplied": {
+            "type": "boolean"
+          },
+          "discountCampaignName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "200 response for `POST /api/AppointmentQueue/PurchaseAppointments`."
+      },
+      "QrCodePrintGroupDto": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "Appointment date (UTC date).",
+            "format": "date-time"
+          },
+          "dateKey": {
+            "type": "string",
+            "description": "Appointment date as `yyyy-MM-dd`.",
+            "nullable": true
+          },
+          "groupCode": {
+            "type": "string",
+            "description": "Group code label.",
+            "nullable": true
+          },
+          "appointmentTime": {
+            "type": "string",
+            "description": "Appointment time range (e.g. `18:00-18:20`).",
+            "nullable": true
+          },
+          "genderId": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "gender": {
+            "type": "string",
+            "description": "Gender as string (`Male` / `Female`).",
+            "nullable": true
+          },
+          "purchaseId": {
+            "type": "integer",
+            "description": "Related purchase record id, if any.",
+            "format": "int32",
+            "nullable": true
+          },
+          "printGuid": {
+            "type": "string",
+            "description": "Print/share short code (5 chars), if assigned.",
+            "nullable": true
+          },
+          "confirmedCount": {
+            "type": "integer",
+            "description": "Passengers ready to print (Confirmed/Completed, not yet Printed).",
+            "format": "int32"
+          },
+          "printedCount": {
+            "type": "integer",
+            "description": "Passengers already marked Printed.",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "description": "Total passengers in this group.",
+            "format": "int32"
+          },
+          "groupKey": {
+            "type": "string",
+            "description": "Stable key used by Print/PrintList filters.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Grouped QR print row as shown on the Print page."
+      },
+      "QrCodePrintListPassengerDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "surname": {
+            "type": "string",
+            "nullable": true
+          },
+          "groupCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "appointmentTime": {
+            "type": "string",
+            "nullable": true
+          },
+          "appointmentStatus": {
+            "$ref": "#/components/schemas/AppointmentStatus"
+          },
+          "genderId": {
+            "$ref": "#/components/schemas/Gender"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true
+          },
+          "purchaseId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "printGuid": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasQr": {
+            "type": "boolean"
+          },
+          "isDisabled": {
+            "type": "boolean"
+          },
+          "isAppointmentPast": {
+            "type": "boolean"
+          },
+          "ravzaReservationId": {
+            "type": "string",
+            "nullable": true
+          },
+          "nusukStatus": {
+            "type": "string",
+            "description": "Nusuk permit status (e.g. `Confirmed`, `COMPLETED`, `Expired`).",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Single passenger row on the PrintList page."
+      },
+      "UserInfo": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "User identifier.",
+            "format": "int32"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email address.",
+            "nullable": true
+          },
+          "companyName": {
+            "type": "string",
+            "description": "Company name (corporate accounts).",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "description": "Phone number.",
+            "nullable": true
+          },
+          "appointmentBalance": {
+            "type": "number",
+            "description": "Remaining appointment balance.",
+            "format": "double"
+          },
+          "authorizedPerson": {
+            "type": "string",
+            "description": "Authorized contact person.",
+            "nullable": true
+          },
+          "userType": {
+            "type": "string",
+            "description": "User type: `Admin`, `Kurumsal`, or `Bireysel`.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Signed-in user profile summary."
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "description": "JWT from POST /api/Auth/login. In Authorize, enter `Bearer {token}`.",
+        "scheme": "Bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

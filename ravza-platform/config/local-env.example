@@ -1,0 +1,102 @@
+# Public/runtime
+APP_URL=http://localhost:3001
+
+# Server-side application roles
+APP_ADMIN_EMAILS=
+APP_SUPER_ADMIN_EMAILS=
+
+# RawdahBooking: keep writes false until the provider contract and synthetic E2E pass
+RAWDAH_BASE_URL=https://rawdahbooking.com
+RAWDAH_AUTH_PATH=/api/Auth/login
+RAWDAH_EMAIL=
+RAWDAH_PASSWORD=
+RAWDAH_LIVE_ENABLED=true
+RAWDAH_WRITE_ENABLED=false
+RAWDAH_PDF_EXPORT_ENABLED=false
+RAWDAH_SHARE_LINK_ENABLED=false
+CUSTOMER_LIVE_AVAILABILITY_ENABLED=false
+RAWDAH_REQUEST_TIMEOUT_MS=15000
+
+# iyzico: sandbox only until commercial, legal and reconciliation gates pass
+IYZICO_BASE_URL=https://sandbox-api.iyzipay.com
+IYZICO_API_KEY=
+IYZICO_SECRET_KEY=
+PAYMENT_DEFAULT_CURRENCY=USD
+CUSTOMER_TURKISH_SHARE_PERCENT=80
+TURKISH_CUSTOMER_TURKEY_RESIDENT_SHARE_PERCENT=99
+PAYMENT_DOMESTIC_USD_REQUIRED=true
+PAYMENT_DOMESTIC_USD_LEGAL_APPROVED=false
+PAYMENT_CHECKOUT_ENABLED=false
+PAYMENT_LIVE_ENABLED=false
+
+# Umrah package sales: all gates stay false until documentary verification
+UMRAH_PACKAGE_ENABLED=false
+UMRAH_PACKAGE_MODEL=own
+UMRAH_PACKAGE_PRICE_USD=
+TRAVEL_AGENCY_AUTHORITY_VERIFIED=false
+DIYANET_UMRAH_AUTHORITY_VERIFIED=false
+PACKAGE_TOUR_CONTRACT_APPROVED=false
+PACKAGE_TOUR_INSURANCE_VERIFIED=false
+
+# Legal identity: required before public launch
+LEGAL_ENTITY_TYPE=Limited Şirket
+LEGAL_COMPANY_NAME=
+LEGAL_BRAND_NAME=Ravza Randevu
+LEGAL_MERSIS_NUMBER=
+LEGAL_TAX_OFFICE=
+LEGAL_TAX_NUMBER=
+LEGAL_ADDRESS=
+LEGAL_CONTACT_EMAIL=
+KVKK_CONTACT_EMAIL=
+LEGAL_KEP_ADDRESS=
+
+# Agency licence display (Seyahat Acentaları Yönetmeliği m.17/3)
+# Numara yalnız TRAVEL_AGENCY_AUTHORITY_VERIFIED=true iken yayımlanır.
+LEGAL_AGENCY_TITLE=
+TRAVEL_AGENCY_LICENCE_NUMBER=
+
+# Customer contact channels (boşken iletişim widget'ı gizlenir)
+LEGAL_CONTACT_PHONE=
+LEGAL_WHATSAPP_NUMBER=
+
+# Google Analytics 4 (boşken hiçbir betik yüklenmez ve onay kutusu çıkmaz)
+GA_MEASUREMENT_ID=
+
+# Google Search Console doğrulaması (boşken meta etiketi eklenmez)
+GOOGLE_SITE_VERIFICATION=
+
+# Google ile giriş (üçü birden dolmadan Google düğmesi görünmez)
+# console.cloud.google.com > APIs & Services > Credentials > OAuth client ID
+# > Web application. Yetkili yönlendirme adresi: <APP_URL>/api/auth/google/callback
+GOOGLE_OAUTH_CLIENT_ID=
+GOOGLE_OAUTH_CLIENT_SECRET=
+APP_URL=
+
+# E-posta gönderimi (ikisi de boşken hiçbir e-posta gönderilmez, kuyrukta durur)
+# Sağlayıcı: Resend (api.resend.com). Alan adı doğrulaması sağlayıcıda yapılır.
+EMAIL_API_KEY=
+EMAIL_FROM_ADDRESS=
+EMAIL_FROM_NAME=Ravza Randevu
+EMAIL_REPLY_TO=
+
+# SMS gönderimi (ikisi de boşken SMS gönderilmez, aynı bilgi e-postayla gider)
+# Sağlayıcı: Netgsm. Gönderici adı operatörde önceden onaylı olmalıdır.
+SMS_API_KEY=
+SMS_SENDER_ID=
+
+# Zamanlanmış gönderim ucu (/api/cron/notifications). Boşken uç tamamen kapalı.
+CRON_SECRET=
+
+# Talep akışı (sipariş asistanı)
+# PII_HASH_SALT girilmezse IP/tarayıcı özeti üretilmez ve hacim sınırı
+# devre dışı kalır. Ham IP hiçbir koşulda saklanmaz.
+PII_HASH_SALT=
+# Faz 2: WhatsApp Cloud API. Doğrulanmış işletme hesabı ve şablon onayı
+# alınana kadar kapalı kalır; kapalıyken yalnız wa.me bağlantısı kullanılır.
+WHATSAPP_CLOUD_API_ENABLED=false
+WHATSAPP_PHONE_NUMBER_ID=
+WHATSAPP_ACCESS_TOKEN=
+# Mesai saatleri (asistan mesai dışında bilgilendirme gösterir)
+SUPPORT_HOURS_WEEKDAY=09:00-18:00
+SUPPORT_HOURS_SATURDAY=10:00-15:00
+SUPPORT_TIMEZONE=Europe/Istanbul
