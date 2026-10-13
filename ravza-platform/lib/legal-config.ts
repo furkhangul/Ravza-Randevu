@@ -2,6 +2,7 @@ export type LegalProfile = {
   entityType: string;
   companyName: string;
   brandName: string;
+  authorizedPerson: string;
   mersisNumber: string;
   taxOffice: string;
   taxNumber: string;
@@ -48,6 +49,7 @@ export function getLegalProfile(
     entityType: value(env, 'LEGAL_ENTITY_TYPE') || 'Limited Şirket',
     companyName: value(env, 'LEGAL_COMPANY_NAME'),
     brandName: value(env, 'LEGAL_BRAND_NAME') || 'Ravza Randevu',
+    authorizedPerson: value(env, 'LEGAL_AUTHORIZED_PERSON'),
     mersisNumber: value(env, 'LEGAL_MERSIS_NUMBER'),
     taxOffice: value(env, 'LEGAL_TAX_OFFICE'),
     taxNumber: value(env, 'LEGAL_TAX_NUMBER'),

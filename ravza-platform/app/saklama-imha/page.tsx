@@ -2,6 +2,13 @@ import { InfoPage, InfoSection } from '@/components/info-page';
 import { LegalDraftBanner } from '@/components/legal-draft-banner';
 import { getLegalProfile } from '@/lib/legal-config';
 
+export const metadata = {
+  title: 'Saklama ve imha politikası · Ravza Randevu',
+  description:
+    'Ravza Randevu’da kişisel verilerin ne kadar süre saklandığı ve nasıl imha edildiği.',
+  alternates: { canonical: '/saklama-imha' },
+};
+
 const rows = [
   [
     'Hesap ve B2B sözleşme',

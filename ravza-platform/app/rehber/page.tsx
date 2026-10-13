@@ -5,6 +5,7 @@ export const metadata = {
   title: "Umre ve ziyaret rehberi · Ravza Randevu",
   description:
     "Umre adımları, Mekke ve Medine ziyaret yerleri, Nusuk randevusu ve yolculuk hazırlıkları hakkında temel bilgiler.",
+  alternates: { canonical: "/rehber" },
 };
 const sections = [
   {

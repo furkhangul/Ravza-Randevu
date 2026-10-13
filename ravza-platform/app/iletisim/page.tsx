@@ -7,6 +7,7 @@ export const metadata = {
   title: "İletişim · Ravza Randevu",
   description:
     "Ravza ziyaret talebiniz hakkında ekibimizle iletişim kurun veya mevcut talebinizi takip edin.",
+  alternates: { canonical: "/iletisim" },
 };
 export default function ContactPage() {
   const profile = getLegalProfile();

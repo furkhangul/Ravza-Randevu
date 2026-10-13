@@ -2,6 +2,13 @@ import { InfoPage, InfoSection } from '@/components/info-page';
 import { LegalDraftBanner } from '@/components/legal-draft-banner';
 import { getLegalProfile } from '@/lib/legal-config';
 
+export const metadata = {
+  title: 'Çerez politikası · Ravza Randevu',
+  description:
+    'Ravza Randevu’da kullanılan zorunlu oturum çerezleri ve yalnız onayla çalışan ölçüm çerezleri.',
+  alternates: { canonical: '/cerez-politikasi' },
+};
+
 export default function CookiePolicyPage() {
   const profile = getLegalProfile();
   return (

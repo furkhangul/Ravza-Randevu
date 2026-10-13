@@ -29,7 +29,12 @@ export async function GET() {
       },
       { headers: NO_STORE },
     );
-  } catch {
+  } catch (error) {
+    // Nedeni sunucu loguna yazılır; parola/token mesajlarda yer almaz.
+    console.error(
+      '[credits/summary]',
+      error instanceof Error ? error.message : error,
+    );
     // Okunamayan bakiye sıfır veya örnek defter toplamı olarak gösterilmez.
     return Response.json(
       { error: 'credit_summary_unavailable' },

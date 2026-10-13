@@ -3,6 +3,10 @@ import { PublicShell } from '@/components/public-shell';
 import { listFeedback } from '@/db/feedback';
 import type { FeedbackRecord } from '@/lib/feedback';
 
+export const metadata = {
+  alternates: { canonical: '/' },
+};
+
 export default async function HomePage() {
   let feedback: FeedbackRecord[] = [];
 

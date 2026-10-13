@@ -79,6 +79,8 @@ async function cloudflarePlugins(): Promise<PluginOption[]> {
         compatibility_flags: ['nodejs_compat'],
         vars: {
           APP_URL: 'https://ravzarandevu.com.tr',
+          // Yasal profil: ayarlar, sözleşme ve KVKK metinlerinde gösterilir.
+          LEGAL_AUTHORIZED_PERSON: 'Hüseyin Sualp',
           // E-posta bildirimleri (Resend). API anahtarı gizli: EMAIL_API_KEY secret olarak girilir.
           EMAIL_FROM_ADDRESS: 'bildirim@ravzarandevu.com.tr',
           EMAIL_FROM_NAME: 'Ravza Randevu',

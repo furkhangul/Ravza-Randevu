@@ -7,6 +7,9 @@ type Env = {
   SMS_API_KEY?: string;
 };
 
+const CANONICAL_HOST = 'ravzarandevu.com.tr';
+const CANONICAL_HOSTS = new Set([CANONICAL_HOST, `www.${CANONICAL_HOST}`]);
+
 /**
  * Cloudflare Worker girişi: istekleri vinext'e bırakır, ayrıca dakikada bir
  * bildirim kuyruğunu işler (`/api/cron/notifications`).
@@ -17,6 +20,17 @@ type Env = {
  */
 export default {
   fetch(request: Request, env: Env, ctx: ExecutionContext) {
+    // SEO: www ve http kopyaları tek kanonik adrese kalıcı yönlendirilir.
+    const url = new URL(request.url);
+    if (
+      CANONICAL_HOSTS.has(url.hostname) &&
+      (url.hostname !== CANONICAL_HOST || url.protocol !== 'https:')
+    ) {
+      url.hostname = CANONICAL_HOST;
+      url.protocol = 'https:';
+      const status = request.method === 'GET' || request.method === 'HEAD' ? 301 : 308;
+      return Response.redirect(url.toString(), status);
+    }
     return handler.fetch(request, env, ctx);
   },
   async scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext) {

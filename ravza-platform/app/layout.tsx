@@ -7,9 +7,21 @@ import "./modern.css";
 
 const siteUrl = process.env.APP_URL ?? "https://ravzarandevu.com.tr";
 
-const title = "Ravza Randevu | Ravza-i Mutahhara ziyaret randevusu";
+const title = "Ravza Randevusu | Ravza-i Mutahhara Ziyaret Randevusu";
 const description =
-  "Ravza ziyaret talebi, umre ve ziyaret rehberi ile kadın ve erkek randevu saatleri.";
+  "Medine'de Ravza-i Mutahhara ziyareti için randevu talebi oluşturun. Bireysel, aile ve grup ziyaretleri, kadın ve erkek ziyaret saatleri, Nusuk süreci ve umre rehberi.";
+
+const verification = {
+  ...(process.env.GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.GOOGLE_SITE_VERIFICATION }
+    : {}),
+  ...(process.env.YANDEX_SITE_VERIFICATION
+    ? { yandex: process.env.YANDEX_SITE_VERIFICATION }
+    : {}),
+  ...(process.env.BING_SITE_VERIFICATION
+    ? { other: { "msvalidate.01": process.env.BING_SITE_VERIFICATION } }
+    : {}),
+};
 
 export const metadata: Metadata = {
   title,
@@ -25,14 +37,20 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   manifest: "/site.webmanifest",
-  ...(process.env.GOOGLE_SITE_VERIFICATION
-    ? {
-        verification: {
-          google: process.env.GOOGLE_SITE_VERIFICATION,
-        },
-      }
-    : {}),
+  ...(Object.keys(verification).length > 0 ? { verification } : {}),
+  keywords: [
+    "Ravza randevusu",
+    "Ravza randevu",
+    "Ravza-i Mutahhara",
+    "Ravza ziyareti",
+    "Nusuk Ravza randevusu",
+    "Mescid-i Nebevi",
+    "umre",
+  ],
   openGraph: {
+    type: "website",
+    locale: "tr_TR",
+    siteName: "Ravza Randevu",
     title,
     description,
     images: [
@@ -79,6 +97,16 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       : {}),
   };
 
+  const website = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: profile.brandName,
+    alternateName: ["Ravza Randevusu", "ravzarandevu.com.tr"],
+    url: siteUrl,
+    inLanguage: "tr-TR",
+    description,
+  };
+
   return (
     <html lang="tr">
       <head>
@@ -88,7 +116,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body className="antialiased">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organization) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify([organization, website]) }}
         />
         {children}
         <AnalyticsConsent measurementId={process.env.GA_MEASUREMENT_ID ?? ""} />

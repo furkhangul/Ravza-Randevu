@@ -23,7 +23,7 @@ import { createHmac } from 'node:crypto';
 import { riyadhToday } from '../lib/date-validation.ts';
 
 void test('appointment balance uses the live account value and refreshes independently of token expiry', async () => {
-  const balances = [5020, 5018, 0];
+  const balances = [5020, 7510.5, 0];
   const calls: string[] = [];
   const provider = new LiveRawdahReadOnlyProvider({
     baseUrl: 'https://example.test',
@@ -45,13 +45,13 @@ void test('appointment balance uses the live account value and refreshes indepen
     },
   });
   assert.equal(await provider.getAppointmentBalance(), 5020);
-  assert.equal(await provider.getAppointmentBalance(), 5018);
+  assert.equal(await provider.getAppointmentBalance(), 7510.5);
   assert.equal(await provider.getAppointmentBalance(), 0);
   assert.deepEqual(calls, Array(3).fill('https://example.test/api/Auth/login'));
 });
 
 void test('missing or invalid live balance never becomes a zero or demo balance', async () => {
-  for (const balance of [undefined, null, '5020', -1, 1.5]) {
+  for (const balance of [undefined, null, '5020', -1, Number.NaN]) {
     const provider = new LiveRawdahReadOnlyProvider({
       baseUrl: 'https://example.test',
       email: 'local@example.test',

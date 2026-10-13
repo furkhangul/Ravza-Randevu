@@ -46,7 +46,7 @@ export function PanelProviders({ children }: { children: ReactNode }) {
         const value = (await response.json()) as CreditSummary;
         if (
           value.source !== 'rawdahbooking' ||
-          !Number.isSafeInteger(value.remaining) ||
+          !Number.isFinite(value.remaining) ||
           value.remaining < 0 ||
           !Number.isFinite(Date.parse(value.fetchedAt))
         ) {

@@ -4,6 +4,7 @@ import { ProfileForm } from '@/components/profile-form';
 import { ScreenGuide } from '@/components/screen-guide';
 import { SectionShell } from '@/components/section-shell';
 import { SupportForm } from '@/components/support-form';
+import { requireAppUser } from '@/lib/app-auth';
 import { getLegalProfile } from '@/lib/legal-config';
 
 export const dynamic = 'force-dynamic';
@@ -24,6 +25,7 @@ export default async function PanelSettingsPage({
     searchParams,
     tabs.map((tab) => tab.key),
   );
+  const user = await requireAppUser('/panel/ayarlar');
   const profile = getLegalProfile();
 
   return (
@@ -35,7 +37,7 @@ export default async function PanelSettingsPage({
       <ScreenGuide
         purpose="Firma bilgileri, bildirim kanalları, destek talepleri ve yasal doğrulama durumu tek ekranda toplandı."
         actions={[
-          'Firma ve yetkili bilgilerini güncellemek',
+          'Firma ve yetkili bilgilerini görmek',
           'Bildirim kanallarını açıp kapatmak',
           'Destek talebi açmak ve geçmişi görmek',
         ]}
@@ -44,7 +46,7 @@ export default async function PanelSettingsPage({
       />
       <PanelTabs basePath="/panel/ayarlar" current={current} tabs={tabs} />
 
-      {current === 'firma' ? <ProfileForm /> : null}
+      {current === 'firma' ? <ProfileForm profile={profile} user={user} /> : null}
       {current === 'bildirim' ? <NotificationCenter /> : null}
       {current === 'destek' ? <SupportForm /> : null}
       {current === 'yasal' ? (
@@ -54,6 +56,7 @@ export default async function PanelSettingsPage({
             <dl className="mt-4 space-y-2 text-sm">
               {[
                 ['Ticari unvan', profile.companyName],
+                ['Yetkili kişi', profile.authorizedPerson],
                 ['Vergi dairesi', profile.taxOffice],
                 ['Vergi numarası', profile.taxNumber],
                 ['MERSİS', profile.mersisNumber],

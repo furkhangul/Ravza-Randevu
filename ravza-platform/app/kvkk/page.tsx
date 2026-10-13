@@ -4,6 +4,13 @@ import { InfoPage, InfoSection } from '@/components/info-page';
 import { LegalDraftBanner } from '@/components/legal-draft-banner';
 import { getLegalProfile, legalValue } from '@/lib/legal-config';
 
+export const metadata = {
+  title: 'KVKK ve kişisel veri koruma · Ravza Randevu',
+  description:
+    'Ravza Randevu kişisel verilerin korunması merkezi: hangi verilerin neden işlendiği, haklarınız ve başvuru yolları.',
+  alternates: { canonical: '/kvkk' },
+};
+
 export default function KvkkPage() {
   const profile = getLegalProfile();
   return (

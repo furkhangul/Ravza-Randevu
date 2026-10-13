@@ -4,6 +4,7 @@ export const metadata = {
   title: "Sık sorulan sorular · Ravza Randevu",
   description:
     "Ravza randevusu, paketler, ödeme, QR kodu ve kişisel veriler hakkında sık sorulan sorular.",
+  alternates: { canonical: "/sss" },
 };
 
 /**

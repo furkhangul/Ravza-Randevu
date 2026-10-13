@@ -6,6 +6,7 @@ import { getLegalProfile, legalValue } from '@/lib/legal-config';
 export const metadata = {
   title: 'Sorumluluk Reddi Beyanı · Ravza Randevu',
   description: 'Ravza Randevu hizmetinin kapsamı, sınırları ve kullanıcı sorumlulukları.',
+  alternates: { canonical: '/sorumluluk-reddi' },
 };
 
 export default function DisclaimerPage() {

@@ -1,38 +1,111 @@
-'use client';
+import { ShieldCheck } from 'lucide-react';
 
-import { useState } from 'react';
-import Link from '@/components/safe-link';
-import { CheckCircle2, Save, ShieldCheck } from 'lucide-react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import type { AppUser } from '@/lib/app-auth';
+import type { LegalProfile } from '@/lib/legal-config';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+const ROLE_LABEL: Record<AppUser['role'], string> = {
+  SUPER_ADMIN: 'Süper yönetici',
+  AGENCY_ADMIN: 'Yönetici',
+  STAFF: 'Personel',
+};
 
-export function ProfileForm() {
-  const [saved, setSaved] = useState(false);
+const AUTH_LABEL: Record<AppUser['authSource'], string> = {
+  password: 'Kullanıcı adı ve parola',
+  google: 'Google ile giriş',
+  chatgpt: 'ChatGPT uygulaması',
+};
+
+/**
+ * Firma bilgileri yasal profilden (Cloudflare ortam değişkenleri) okunur;
+ * aynı bilgiler sözleşme, KVKK ve alt bilgi metinlerinde de kullanılır. Bu
+ * yüzden burada değil, tek kaynaktan değiştirilir.
+ */
+export function ProfileForm({
+  profile,
+  user,
+}: {
+  profile: LegalProfile;
+  user: AppUser;
+}) {
+  const rows: Array<[string, string]> = [
+    ['Marka', profile.brandName],
+    ['Ticari unvan', profile.companyName],
+    ['Şirket türü', profile.entityType],
+    ['Yetkili kişi', profile.authorizedPerson],
+    ['E-posta', profile.contactEmail],
+    ['Telefon', profile.contactPhone],
+    ['WhatsApp', profile.whatsappNumber],
+    ['Adres', profile.address],
+    ['Vergi dairesi', profile.taxOffice],
+    ['Vergi numarası', profile.taxNumber],
+    ['MERSİS', profile.mersisNumber],
+    ['TÜRSAB belge no', profile.agencyLicenceNumber],
+  ];
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_.65fr]">
       <Card className="border-0 shadow-[0_14px_48px_rgba(20,38,28,.07)] ring-1 ring-border">
-        <CardHeader><CardTitle className="font-serif text-2xl">Firma bilgileri</CardTitle><CardDescription>Bu form firma profilini yerel olarak günceller; muhasebe ve fatura sistemine aktarım ayrıca bağlanır.</CardDescription></CardHeader>
+        <CardHeader>
+          <CardTitle className="font-serif text-2xl">Firma bilgileri</CardTitle>
+          <CardDescription>
+            Sözleşme, KVKK metni ve site alt bilgisinde kullanılan resmî
+            bilgiler. Değişiklik için sistem yöneticisine iletin.
+          </CardDescription>
+        </CardHeader>
         <CardContent>
-          <form className="grid gap-4 sm:grid-cols-2" onSubmit={(event) => { event.preventDefault(); setSaved(true); }}>
-            <label htmlFor="company-name" className="space-y-2 text-sm font-medium">Firma adı<Input id="company-name" defaultValue="Hira Turizm" className="h-11" /></label>
-            <label htmlFor="contact-name" className="space-y-2 text-sm font-medium">Yetkili kişi<Input id="contact-name" defaultValue="Furkan G." className="h-11" /></label>
-            <label htmlFor="company-email" className="space-y-2 text-sm font-medium">E-posta<Input id="company-email" type="email" defaultValue="operasyon@firma.com" className="h-11" /></label>
-            <label htmlFor="company-phone" className="space-y-2 text-sm font-medium">Telefon<Input id="company-phone" defaultValue="+90 5•• ••• •• 41" className="h-11" /></label>
-            <label htmlFor="tursab-number" className="space-y-2 text-sm font-medium">TÜRSAB no<Input id="tursab-number" defaultValue="A-••••" className="h-11" /></label>
-            <label htmlFor="tax-number" className="space-y-2 text-sm font-medium">Vergi no<Input id="tax-number" defaultValue="••••••••21" className="h-11" /></label>
-            <div className="flex flex-col gap-3 pt-2 sm:col-span-2 sm:flex-row sm:items-center">
-              <Button type="submit" className="h-11 rounded-xl"><Save /> Yerel taslağı kaydet</Button>
-              {saved && <span className="flex items-center gap-2 text-sm font-medium text-[#19613f]"><CheckCircle2 className="size-4" /> Taslak bu oturum için kaydedildi.</span>}
-            </div>
-          </form>
+          <dl className="divide-y divide-border text-sm">
+            {rows.map(([label, value]) => (
+              <div key={label} className="flex justify-between gap-4 py-3">
+                <dt className="shrink-0 text-muted-foreground">{label}</dt>
+                <dd className="text-end font-medium">
+                  {value || (
+                    <span className="font-normal text-[color:var(--warning)]">
+                      eksik
+                    </span>
+                  )}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </CardContent>
       </Card>
       <Card className="border-0 bg-primary text-primary-foreground">
-        <CardHeader><div className="mb-2 grid size-11 place-items-center rounded-2xl bg-white/10"><ShieldCheck /></div><CardTitle className="font-serif text-2xl">Hesap güvenliği</CardTitle><CardDescription className="text-primary-foreground/65">Yönetici hesaplarında MFA ve yeniden kimlik doğrulama canlıya geçişten önce zorunlu olacak.</CardDescription></CardHeader>
-        <CardContent className="space-y-3 text-sm text-primary-foreground/80"><p>• Aktif rol: Acente yöneticisi</p><p>• Son oturum: Bu cihaz</p><p>• Bildirim kanalı: Bağlı değil</p><div className="grid gap-2 pt-2"><Link href="/mfa" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-white/25 text-sm font-medium text-white">MFA demosunu aç</Link><Link href="/notification-channels" className="inline-flex min-h-10 items-center justify-center rounded-xl border border-white/25 text-sm font-medium text-white">Bildirim tercihleri</Link><Link href="/dashboard/membership" className="inline-flex min-h-10 items-center justify-center rounded-xl bg-[#d2b77b] text-sm font-semibold text-[#071c14]">Üyelik ve haklar</Link></div></CardContent>
+        <CardHeader>
+          <div className="mb-2 grid size-11 place-items-center rounded-2xl bg-white/10">
+            <ShieldCheck />
+          </div>
+          <CardTitle className="font-serif text-2xl">Oturumunuz</CardTitle>
+          <CardDescription className="text-primary-foreground/65">
+            Bu panele şu anda giriş yapmış hesap.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-primary-foreground/80">
+          <p className="flex justify-between gap-4">
+            <span>Ad</span>
+            <strong className="text-end">
+              {user.fullName || user.displayName || '—'}
+            </strong>
+          </p>
+          <p className="flex justify-between gap-4">
+            <span>E-posta</span>
+            <strong className="break-all text-end">{user.email}</strong>
+          </p>
+          <p className="flex justify-between gap-4">
+            <span>Rol</span>
+            <strong>{ROLE_LABEL[user.role]}</strong>
+          </p>
+          <p className="flex justify-between gap-4">
+            <span>Giriş yöntemi</span>
+            <strong>{AUTH_LABEL[user.authSource]}</strong>
+          </p>
+        </CardContent>
       </Card>
     </div>
   );

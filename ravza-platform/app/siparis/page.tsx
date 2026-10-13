@@ -9,6 +9,7 @@ export const metadata = {
   title: "Ziyaret talebi · Ravza Randevu",
   description:
     "Ravza ziyaretinizi planlayın. Asistana sorun, ziyaret bilgilerinizi hazırlayın ve talebinizi ekibimize iletin.",
+  alternates: { canonical: "/siparis" },
 };
 export default async function OrderPage({
   searchParams,

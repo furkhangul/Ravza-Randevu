@@ -401,7 +401,7 @@ export class LiveRawdahReadOnlyProvider implements RawdahProvider {
       : null;
     this.appointmentBalance =
       typeof balance === 'number' &&
-      Number.isSafeInteger(balance) &&
+      Number.isFinite(balance) &&
       balance >= 0
         ? balance
         : null;

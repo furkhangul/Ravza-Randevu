@@ -35,6 +35,9 @@ const MARQUEE_REPEAT = 8;
 export function LaunchAnnouncement() {
   const { locale } = usePublicPreferences();
   const message = copy[locale].announcement;
+  // Tekrarlar yalnız tarayıcıda eklenir; arama motoru yazıyı bir kez görür.
+  const [repeat, setRepeat] = useState(1);
+  useEffect(() => setRepeat(MARQUEE_REPEAT), []);
 
   return (
     <div className="overflow-hidden border-b border-[#d6bd83]/35 bg-[#0a2e1f] text-white">
@@ -43,7 +46,7 @@ export function LaunchAnnouncement() {
             İz iki eş yarıdan oluşur; -%50 kaydırma kesintisiz döngü sağlar. */}
         <div className="launch-marquee-track">
           {[0, 1].map((half) =>
-            Array.from({ length: MARQUEE_REPEAT }, (_, index) => (
+            Array.from({ length: half === 0 || repeat > 1 ? repeat : 0 }, (_, index) => (
               <span
                 key={`${half}-${index}`}
                 className="px-8"

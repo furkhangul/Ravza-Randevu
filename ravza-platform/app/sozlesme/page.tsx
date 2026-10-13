@@ -2,6 +2,13 @@ import { InfoPage, InfoSection } from '@/components/info-page';
 import { LegalDraftBanner } from '@/components/legal-draft-banner';
 import { getLegalProfile, legalValue } from '@/lib/legal-config';
 
+export const metadata = {
+  title: 'Hizmet ve kullanım koşulları · Ravza Randevu',
+  description:
+    'Ravza Randevu acente hizmetinin kapsamı, sınırları ve kullanım koşulları.',
+  alternates: { canonical: '/sozlesme' },
+};
+
 export default function TermsPage() {
   const profile = getLegalProfile();
   return (

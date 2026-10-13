@@ -8,6 +8,7 @@
     "build": "vinext build",
     "start": "node dist/standalone/server.js",
     "deploy": "node scripts/deploy-cloudflare.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
     "lint": "oxlint",
     "format": "oxfmt",
     "db:generate": "drizzle-kit generate",
